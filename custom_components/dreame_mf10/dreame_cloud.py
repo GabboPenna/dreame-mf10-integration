@@ -90,6 +90,7 @@ class DreameCloud:
 
     @property
     def api_url(self) -> str:
+        """Return the API base URL for the resolved cloud cluster."""
         return f"https://{self.api_region}.iot.dreame.tech:13267"
 
     async def async_login(self) -> None:

@@ -31,16 +31,21 @@ REGION_OPTIONS = _CONST_MODULE.REGION_OPTIONS
 
 
 class DreameCloudRegionTests(unittest.TestCase):
+    """Verify country choices resolve to the expected Dreame cloud cluster."""
+
     def test_canada_is_available_in_config_flow_options(self) -> None:
+        """Expose Canada as an explicit config-flow choice."""
         self.assertEqual(REGION_OPTIONS["ca"], "Canada (US cloud)")
 
     def test_canada_uses_us_cloud_cluster(self) -> None:
+        """Route Canadian accounts to the US API endpoint."""
         cloud = DreameCloud("user", "password", "ca", object())
 
         self.assertEqual(cloud.api_region, "us")
         self.assertEqual(cloud.api_url, "https://us.iot.dreame.tech:13267")
 
     def test_existing_regions_are_unchanged(self) -> None:
+        """Keep every previously supported region routed unchanged."""
         for region in ("eu", "cn", "us", "sg", "ru"):
             with self.subTest(region=region):
                 cloud = DreameCloud("user", "password", region, object())
@@ -52,6 +57,7 @@ class DreameCloudRegionTests(unittest.TestCase):
                 )
 
     def test_canada_does_not_receive_china_only_header(self) -> None:
+        """Avoid applying China-only headers to Canadian requests."""
         cloud = DreameCloud("user", "password", "ca", object())
         cloud._access_token = "access-token"
 
